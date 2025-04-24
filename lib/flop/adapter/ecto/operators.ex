@@ -138,6 +138,15 @@ defmodule Flop.Adapter.Ecto.Operators do
     {fragment, nil, nil}
   end
 
+  def op_config(:in_or_null) do
+    fragment =
+      quote do
+        field(r, ^var!(field)) in ^var!(value) or is_nil(field(r, ^var!(field))) == true
+      end
+
+    {fragment, nil, nil}
+  end
+
   def op_config(:contains) do
     fragment =
       quote do

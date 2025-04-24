@@ -85,6 +85,7 @@ defmodule Flop.Filter do
           | :>=
           | :>
           | :in
+          |:in_or_null
           | :not_in
           | :contains
           | :not_contains
@@ -108,6 +109,7 @@ defmodule Flop.Filter do
     :>=,
     :>,
     :in,
+    :in_or_null,
     :not_in,
     :contains,
     :not_contains,
@@ -185,6 +187,7 @@ defmodule Flop.Filter do
   defp value_type(nil, _), do: Any
   defp value_type(%FieldInfo{ecto_type: type}, op), do: value_type(type, op)
   defp value_type(type, :in), do: {:array, type}
+  defp value_type(type, :in_or_null), do: {:array, type}
   defp value_type(type, :not_in), do: {:array, type}
   defp value_type({:array, type}, :contains), do: type
   defp value_type({:array, type}, :not_contains), do: type
@@ -239,7 +242,7 @@ defmodule Flop.Filter do
   list with all operators is returned.
 
       iex> allowed_operators(Pet, :age)
-      [:==, :!=, :empty, :not_empty, :<=, :<, :>=, :>, :in, :not_in]
+      [:==, :!=, :empty, :not_empty, :<=, :<, :>=, :>, :in, :in_or_null, :not_in]
   """
   @spec allowed_operators(atom, atom) :: [op]
   def allowed_operators(module, field)
@@ -266,7 +269,7 @@ defmodule Flop.Filter do
   returned.
 
       iex> allowed_operators(:integer)
-      [:==, :!=, :empty, :not_empty, :<=, :<, :>=, :>, :in, :not_in]
+      [:==, :!=, :empty, :not_empty, :<=, :<, :>=, :>, :in, :in_or_null, :not_in]
   """
   @spec allowed_operators(FieldInfo.t() | Flop.Schema.ecto_type() | nil) :: [op]
   def allowed_operators(%FieldInfo{operators: operators})
@@ -284,7 +287,7 @@ defmodule Flop.Filter do
 
   defp get_allowed_operators(type)
        when type in [:decimal, :float, :id, :integer] do
-    [:==, :!=, :empty, :not_empty, :<=, :<, :>=, :>, :in, :not_in]
+    [:==, :!=, :empty, :not_empty, :<=, :<, :>=, :>, :in, :in_or_null, :not_in]
   end
 
   defp get_allowed_operators(type) when type in [:binary_id, :string] do
@@ -299,6 +302,7 @@ defmodule Flop.Filter do
       :>=,
       :>,
       :in,
+      :in_or_null,
       :not_in,
       :like,
       :not_like,
@@ -326,6 +330,7 @@ defmodule Flop.Filter do
       :>=,
       :>,
       :in,
+      :in_or_null,
       :not_in,
       :contains,
       :not_contains
@@ -333,11 +338,11 @@ defmodule Flop.Filter do
   end
 
   defp get_allowed_operators({:map, _}) do
-    [:==, :!=, :empty, :not_empty, :in, :not_in]
+    [:==, :!=, :empty, :not_empty, :in, :in_or_null, :not_in]
   end
 
   defp get_allowed_operators(:map) do
-    [:==, :!=, :empty, :not_empty, :in, :not_in]
+    [:==, :!=, :empty, :not_empty, :in, :in_or_null, :not_in]
   end
 
   defp get_allowed_operators(type)
@@ -350,7 +355,7 @@ defmodule Flop.Filter do
               :utc_datetime,
               :utc_datetime_usec
             ] do
-    [:==, :!=, :empty, :not_empty, :<=, :<, :>=, :>, :in, :not_in]
+    [:==, :!=, :empty, :not_empty, :<=, :<, :>=, :>, :in, :in_or_null, :not_in]
   end
 
   defp get_allowed_operators({:parameterized, {Ecto.Enum, _}}) do
@@ -364,6 +369,7 @@ defmodule Flop.Filter do
       :>=,
       :>,
       :in,
+      :in_or_null,
       :not_in
     ]
   end
@@ -380,6 +386,7 @@ defmodule Flop.Filter do
       :>=,
       :>,
       :in,
+      :in_or_null,
       :not_in
     ]
   end
@@ -396,6 +403,7 @@ defmodule Flop.Filter do
       :>=,
       :>,
       :in,
+      :in_or_null,
       :not_in,
       :contains,
       :not_contains,

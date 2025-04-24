@@ -76,6 +76,7 @@ defmodule FlopTest do
                         :>=,
                         :>,
                         :in,
+                        :in_or_null,
                         :not_in
                       ]
                     ]}

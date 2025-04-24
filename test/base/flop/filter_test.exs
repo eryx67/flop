@@ -76,6 +76,7 @@ defmodule Flop.FilterTest do
         :>=,
         :>,
         :in,
+        :in_or_null,
         :not_in
       ]
 
@@ -105,6 +106,7 @@ defmodule Flop.FilterTest do
                :>=,
                :>,
                :in,
+               :in_or_null,
                :not_in
              ]
     end
@@ -121,6 +123,7 @@ defmodule Flop.FilterTest do
                :>=,
                :>,
                :in,
+               :in_or_null,
                :not_in,
                :like,
                :not_like,
@@ -142,6 +145,7 @@ defmodule Flop.FilterTest do
                :>=,
                :>,
                :in,
+               :in_or_null,
                :not_in
              ]
     end

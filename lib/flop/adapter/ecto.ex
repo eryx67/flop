@@ -23,6 +23,7 @@ defmodule Flop.Adapter.Ecto do
     :>,
     :<,
     :in,
+    :in_or_null,
     :contains,
     :not_contains,
     :like,
@@ -582,6 +583,7 @@ defmodule Flop.Adapter.Ecto do
               :>=,
               :>,
               :in,
+              :in_or_null,
               :not_in,
               :contains,
               :not_contains

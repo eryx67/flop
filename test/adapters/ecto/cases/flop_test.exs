@@ -646,6 +646,25 @@ defmodule Flop.Adapters.Ecto.FlopTest do
       end
     end
 
+    property "applies :in_or_null operator" do
+      check all pet_count <- integer(@pet_count_range),
+                pets = insert_list_and_sort(pet_count, :pet_with_owner),
+                field <- member_of([:age, :name, :owner_age]),
+                values = Enum.map(pets, &Map.get(&1, field)),
+                query_value <-
+                  list_of(one_of([member_of(values), value_by_field(field)]),
+                    max_length: 5
+                  ) do
+        expected = filter_items(pets, field, :in_or_null, query_value)
+
+        assert query_pets_with_owners(%{
+                 filters: [%{field: field, op: :in_or_null, value: query_value}]
+               }) == expected
+
+        checkin_checkout()
+      end
+    end
+
     property "applies :not_in operator" do
       check all pet_count <- integer(@pet_count_range),
                 pets = insert_list_and_sort(pet_count, :pet_with_owner),
